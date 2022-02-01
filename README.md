@@ -1,3 +1,2 @@
 # Statistical Modelling
-
-## This program predicts baseball division winners using logistic regression.
+This program predicts baseball division winners using logistic regression.
