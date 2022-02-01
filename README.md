@@ -13,5 +13,16 @@ To run this program, install R studio locally. [Download R Studio](https://www.r
 * Logistic Regression
 
 ### Data Wrangling
-Line 42 - 145 : Wrangling of the dataset to create tibbles and varaibles used  
-through ou the program
+42 - 145 : Wrangling of the dataset to create tibbles and variables used  
+to fit models
+
+### Linear Regression
+146 - 243: Fit simple linear regression model using log of mean salary as   
+function of year
+
+### Possion model
+247 - 344 : Fit poisson model to predict number of runs ade by a player  
+using a number of predcitor variables selected.
+
+### Lasso Regression
+
