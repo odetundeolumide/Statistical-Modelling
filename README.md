@@ -25,4 +25,9 @@ function of year
 using a number of predcitor variables selected.
 
 ### Lasso Regression
+351 - 424 : Used Lasso regression and cross validation to determine predictor  
+variables needed to fit Logistic regression.
 
+### Logistic Regression
+429 - 484 : Fit Logistic regression model to predict division league winners 
+using training data and validated on test data.
