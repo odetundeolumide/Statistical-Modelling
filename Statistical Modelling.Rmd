@@ -1,5 +1,5 @@
 ---
-title: "course_work notebook"
+title: "Statistical Modelling notebook"
 output:
   html_document:
     df_print: paged
@@ -51,9 +51,7 @@ people_data <- People %>%
   dplyr::select(-birthMonth,-birthCity,-birthDay,-birthDate,-birthState,-nameGiven,-finalGame,-retroID,-bbrefID,-birthCountry) %>%  
   dplyr::select(-contains("death"))
 ```
-
-
-b.  [5 + 0 points] Create new datasets called Battingdata and Fieldingdata by 
+Create new datasets called Battingdata and Fieldingdata by 
 
     i. choosing data from the years 1985 and 2015,
     
@@ -87,7 +85,7 @@ fielding_data <- fielding_data %>%
 
 ```
 
-c.  [6 + 0 points] Create a dataset 'Playerdata' from the dataset 'Salaries' by 
+Create a dataset 'Playerdata' from the dataset 'Salaries' by 
     
     i. selecting data from the years 1985 and 2015, 
     
@@ -119,7 +117,7 @@ player_data <- as_tibble(player_data)
 ```
 
 
-d.  [4 + 0 points] Create a dataset called 'TeamSalaries' in which there is a row for each team and each year and the variables are:
+Create a dataset called 'TeamSalaries' in which there is a row for each team and each year and the variables are:
     
     i. 'Rostercost' = the sum of all player salaries for the given team in the given year
     
@@ -134,7 +132,7 @@ team_salaries <- Lahman::Salaries %>%
 ```
 
 
-e. [2 + 0 points] Create a dataset 'Teamdata' by taking the data from the Teams dataset for the years 1984 to 2016, inclusive and adding to that data the variables in TeamSalaries. Drop any incomplete cases from the dataset.
+Create a dataset 'Teamdata' by taking the data from the Teams dataset for the years 1984 to 2016, inclusive and adding to that data the variables in TeamSalaries. Drop any incomplete cases from the dataset.
 
 
 ```{r}
@@ -148,7 +146,7 @@ team_data <- as_tibble(team_data)
 
 # 2. Simple Linear Regression
 
-a.  [2 + 2 points] Create one plot of mean team salaries over time from 1984 to 2016, and another of the log base 10 of team mean salaries over time from 1984 to 2016.  Give two reasons why a linear model is more appropriate for log base 10 mean salaries than for raw mean salaries.
+Create one plot of mean team salaries over time from 1984 to 2016, and another of the log base 10 of team mean salaries over time from 1984 to 2016.  Give two reasons why a linear model is more appropriate for log base 10 mean salaries than for raw mean salaries.
 
 ```{r}
 
@@ -175,7 +173,7 @@ team_data %>% ggplot(aes(yearID,log10(meansalary)))+
 **The log of the mean salary against  years plots presents a stronger positive left right linear relationship with a steeper trend line compared to the plot of mean salary against year, furthermore,the log of the mean salary plot against time presents an even spread of data points from left to right with fewer extreme data points on both sides of the trend line while the mean salary plot presents a diverging and uneven spread of data points from left to right with a number of extreme data point especially towards the right side of the plot above the trend line.**
 
 
-b. [1 + 3 points] Fit a model of $log_{10}$(meansalary) as a function of yearID.  Write the form of the model and explain what the Multiple R-Squared tells us.
+Fit a model of $log_{10}$(meansalary) as a function of yearID.  Write the form of the model and explain what the Multiple R-Squared tells us.
 
 ```{r}
 linear_model<-lm(log10(meansalary)~yearID,data=team_data)
@@ -189,7 +187,7 @@ $$
 #This model has a  mulitple r-squared value of  0.4878 and this means that  the variable (yearID) explains 48.78% of the variability of the response  (log of mean salary)
 
 
-c.  [1 + 8 points] State and evaluate the four assumptions of linear models for this data.
+State and evaluate the four assumptions of linear models for this data.
 
 ```{r}
 linear_model %>%
@@ -203,7 +201,7 @@ linear_model %>%
 
 **Independence:We don’t have a natural order in this data set, so this can not be investigated.**
 
-d.  [3 + 1 points] Plot confidence and prediction bands for this model.  Colour the points according to who won the World Series each year.  Comment on what you find.
+Plot confidence and prediction bands for this model.  Colour the points according to who won the World Series each year.  Comment on what you find.
 
 ```{r}
 confint(linear_model)
@@ -233,7 +231,7 @@ ggplot(myteams,aes(yearID,log10(meansalary),colour=WSWin))+
 ```
 **The prediction interval is the interval in which we anticipate that 95% of our data point should occur as the prediction band takes account both of the uncertainty in the estimate of the mean and the variance in the residuals , however a  number of data point do not lie within the prediction band, as some occur above the prediction band and some below the prediction band**
 
- e. [1 + 1 points] Investigate the points that appear above the top prediction band.  What team or teams do they relate to?
+Investigate the points that appear above the top prediction band.  What team or teams do they relate to?
 ```{r}
 teams_above_prediction_band <- myteams %>%
 mutate(log_of_mean_salary = log10(meansalary)) %>%
@@ -246,7 +244,7 @@ teams_above_prediction_band
 
 # 3. Multiple regression for Count Data
 
-a. [2 + 2 points] Create a histogram of the number of runs scored for players in the Playerdata dataset so each bar is a single value (0,1,2 runs, etc).  Next create a histogram of the number of runs for all players who have had a hit. Give a domain-based and a data-based reason why it is more reasonable to create a Poisson data for the second set than the first. 
+Create a histogram of the number of runs scored for players in the Playerdata dataset so each bar is a single value (0,1,2 runs, etc).  Next create a histogram of the number of runs for all players who have had a hit. Give a domain-based and a data-based reason why it is more reasonable to create a Poisson data for the second set than the first. 
 
 ```{r}
 
@@ -270,7 +268,7 @@ player_data %>%
 **Data-based reason: Including players who have not made a hit and scored a run in our model could possibly lead to underdispersion as the model would be taking into account data point that are extreme(the values will be zero) and not relevant, so building a model  with players who have made a hit and scored a run helps us build a model with significant and relevant data points in this context.**
 
 
-b.  [3 + 0 points] Create a new dataset, OnBase of all players who have had at least one hit.  Transform yearID to a factor.  Construct a Poisson model, glm1, of the number of runs as a function of the number of hits, the year as a factor, position played and player height and age.
+Create a new dataset, OnBase of all players who have had at least one hit.  Transform yearID to a factor.  Construct a Poisson model, glm1, of the number of runs as a function of the number of hits, the year as a factor, position played and player height and age.
 
 ```{r}
 OnBase <- player_data %>%
@@ -284,7 +282,7 @@ $$
 {\rm log(number of runs)} \sim N(2.494 + 0.01285 \times  {\rm H} +0.012231 \times  {\rm yearid2015} + -0.01152 \times  {\rm POS2B} +0.005319 \times  {\rm POS3B} + -0.06297 \times  {\rm posc} + 0.06322 \times  {\rm POSOF} + -1.171 \times  {\rm POSP} + -0.01123 \times  {\rm POSSS} + -0.003584 \times  {\rm height} + 0.0104693 \times  {\rm age} ).
 $$
 
-c.  [2 + 4 points] Find the p-value for each of the predictor variables in this model using a Likelihood Ratio Test.  What hypothesis does each p-value test, and what mathematically does a p-value tell you about a variable?  Use this definition to say what is meant by the p-value associated to POS and to the p-value associated to height.
+Find the p-value for each of the predictor variables in this model using a Likelihood Ratio Test.  What hypothesis does each p-value test, and what mathematically does a p-value tell you about a variable?  Use this definition to say what is meant by the p-value associated to POS and to the p-value associated to height.
 
 
 ```{r}
@@ -297,7 +295,7 @@ Anova(glm(R~H+yearID+POS+height+age,data=OnBase,family="poisson"))
 
 **The p-value for height (0.10994) is large and greater than 0.05, hence it is statistically insignificant and suggests that height is not an important predictor to the model.**  
 
-d. [1 + 8 points] State the assumptions of Poisson models and check these where possible.
+State the assumptions of Poisson models and check these where possible.
 
 **Dispersion assumption**
 ```{r}
@@ -332,7 +330,7 @@ plot(glm1,which=2)
 
 **Independence: We can investigate (deviance) residuals as a function of order of data points and look for evidence of “snaking”. We don’t have a natural order in this data set, so this can not be investigated.**
 
-e. [2 + 4 points] Now create a new model that includes teamID as a random effect.  Ensure there are no fit warnings.  What does the result tell us about the importance of team on number of runs that players score?  Is this a relatively large or small effect?  How could we check the statistical significance of this effect in R?
+Now create a new model that includes teamID as a random effect.  Ensure there are no fit warnings.  What does the result tell us about the importance of team on number of runs that players score?  Is this a relatively large or small effect?  How could we check the statistical significance of this effect in R?
 
 ```{r}
 mixed_model<-glmer(R~H+yearID+POS+height+age+(1|teamID),data=OnBase,family="poisson")
@@ -340,7 +338,7 @@ summary(mixed_model)
 ```
 **Importance of team on numbers of runs a player scores is the exponent of ±2 standard deviation tau(0.0965) which is -1.96*tau to +1.96 * tau, hence it will have the following effect, for a player in an average team there is no impact, for an excellent team player it means the player will score on average 1.20821 times as many runs than from an average team, for a player that plays in a poor quality team, it means the player will score on an average 1.20821 times fewer compared to a player from an average team.Mathematically, this effect is relatively small because if an average team player scores 10 runs, it means an excellent team player will score 12 runs and a poor quality team player will score 8 runs, however in a game of baseball one additional home run can win a game.**
 
-f. [2 + 0 points] What is the mean number of runs could you expect 30-year old, 72 inch tall outfielders playing for the Baltimore Orioles in 2015 with 20 hits to have scored? 
+What is the mean number of runs could you expect 30-year old, 72 inch tall outfielders playing for the Baltimore Orioles in 2015 with 20 hits to have scored? 
 
 ```{r}
 predict(mixed_model,newdata = data.frame (H=20, yearID="2015", POS="OF",height=72,age=30,teamID = "BAL"),type="response")
@@ -350,7 +348,7 @@ predict(mixed_model,newdata = data.frame (H=20, yearID="2015", POS="OF",height=7
 
 # 4.  Lasso Regression for Logistic Regression
 
-a. [4 + 0 points] Create a new dataset DivWinners by removing all of the variables that are team or park identifiers in the dataset, as well as 'lgID', 'Rank','franchID','divID', 'WCWin','LgWin', and 'WSwin'.
+Create a new dataset DivWinners by removing all of the variables that are team or park identifiers in the dataset, as well as 'lgID', 'Rank','franchID','divID', 'WCWin','LgWin', and 'WSwin'.
 Split the resulting into a training and a testing set so that the variable 'DivWin' is balanced between the two datasets.  Use the seed 123.
 
 ```{r}
@@ -374,7 +372,7 @@ test.data
 
 
 
-b.  [4 + 0 points] Use the training data to fit a logistic regression model using the 'glmnet' command.  Plot residual deviance against number of predictors.
+Use the training data to fit a logistic regression model using the 'glmnet' command.  Plot residual deviance against number of predictors.
 
 ```{r}
 divwin_vector<-as.vector(train.data$DivWin)
@@ -387,7 +385,7 @@ divfit<- glmnet(div_predict,divwin_vector,family="binomial")
 plot(divfit,xvar="dev",ylim = c(-1,1))
 ```
 
-c.  [2 + 2 points] How many nonzero model coefficients are needed to explain 50% of the deviance? 60%?  Which coefficients are these in each case?  
+How many nonzero model coefficients are needed to explain 50% of the deviance? 60%?  Which coefficients are these in each case?  
 
 ```{r}
 divfit
@@ -410,7 +408,7 @@ divfit_60_pct@Dimnames[[1]][1+divfit_60_pct@i]
 ```
 **27 non-zero coefficients will be needed to explain 60% deviance. This is quite a huge leap from 2 (to explain 50% of the deviance )to 27 (to explain 60% of the variance).The 27 non-zero coefficients are :"yearID","Ghome","W","L","AB","H","X2B","X3B""HR","BB","SO","SB","CS","HBP","SF","RA","CG","SV","HA","HRA","BBA","SOA","DP","FP","attendance","PPF","rostersize")**
 
-d.  [2 + 1 points] Now use cross-validation to choose a moderately conservative model.  State the variables you will include.
+Now use cross-validation to choose a moderately conservative model.  State the variables you will include.
 
 ```{r}
 set.seed(123)
@@ -445,7 +443,7 @@ legend(0,0.4,legend=c("training","testing"),fill=1:2)
 ```
 **These two curves (for train and test data) are close to each other and this is an indication that the model did not overfit the data.**
 
-f.  [4 + 2 points] Find Youden's index for the training data and calculate confusion matrices at this cutoff for both training and testing data.  Comment on the quality of the model for prediction in terms of false negative and false positive rates for the testing data.
+Find Youden's index for the training data and calculate confusion matrices at this cutoff for both training and testing data.  Comment on the quality of the model for prediction in terms of false negative and false positive rates for the testing data.
 
 
 ```{r}
@@ -484,94 +482,3 @@ $$
 $$
 **On the test data,the model identified 25/26 division winners correctly and misclassified only 1 division winner bringing  the percentage sensitivity to 96.15%, the model also identified 87/104 teams that weren't division winners correctly and misclassified 17 teams that weren't division winners as division winners bringing the percentage specificity to 83.65%. Overall the model performance was also really good for the test data  as the percentage sensitivity increased on the test data.The percentage specificity on the test data dropped by a tiny bit, but overall the model performance was also great on the test data.**
 **It is also important to note that with this model performance on the test data, this model did not overfit**
-
-g.  [5 + 1 points] Calculate the sensitivity+specificity on the testing data as a function of divID and plot as a barchart.  Is the prediction equally good for all divisions? 
-
-
-```{r}
-div_winners_id <- team_data %>% 
-  dplyr::select(-lgID,-Rank,-franchID,-WCWin,-LgWin,-WSWin,-name) %>% 
-  dplyr::select(-contains("team")) %>% 
-  dplyr::select(-contains("park"))
-
-set.seed(123)
-training.samples_2 <- div_winners_id$divID %>%
-  createDataPartition(p = 0.8, list = FALSE)
-train.data_id  <- div_winners_id[training.samples_2,]
-test.data_id <- div_winners_id[-training.samples_2,]
-
-train.data_id
-test.data_id
-```
-
-*Team Division C*
-```{r}
-
-roctrain_id_c <-roc(response=train.data_id$divID=="C",predictor=div_win_predict_train,plot=TRUE,main="ROC Curve for DivWin",auc=TRUE)
-roctest_id_c<- roc(response=test.data_id$divID=="C",predictor=div_win_predict_test,plot=TRUE,auc=TRUE,add=TRUE,col=2)
-legend(0,0.4,legend=c("training","testing"),fill=1:2)
-
-
-youden_id_train_c<-coords(roctrain_id_c,"b",best.method="youden",transpose=TRUE)
-youden_id_train_c
-youden_id_train_c[2]+youden_id_train_c[3]
-
-youden_id_test_c<-coords(roctest_id_c,x=0.01842452 ,transpose=TRUE)
-youden_sens_spec_c <- youden_id_test_c[2]+youden_id_test_c[3]
-youden_sens_spec_c
-
-```
-
-*Team Division E*
-```{r}
-
-roctrain_id_e <-roc(response=train.data_id$divID=="E",predictor=div_win_predict_train,plot=TRUE,main="ROC Curve for DivWin",auc=TRUE)
-roctest_id_e<- roc(response=test.data_id$divID=="E",predictor=div_win_predict_test,plot=TRUE,auc=TRUE,add=TRUE,col=2)
-legend(0,0.4,legend=c("training","testing"),fill=1:2)
-
-
-youden_id_train_e<-coords(roctrain_id_e,"b",best.method="youden",transpose=TRUE)
-youden_id_train_e
-youden_id_train_e[2]+youden_id_train_e[3]
-
-youden_id_test_e<-coords(roctest_id_e,x=0.3821811,transpose=TRUE)
-youden_sens_spec_e <- youden_id_test_e[2]+youden_id_test_e[3]
-youden_sens_spec_e
-
-```
-
-*Team Division W*
-```{r}
-roctrain_id_w <-roc(response=train.data_id$divID=="W",predictor=div_win_predict_train,plot=TRUE,main="ROC Curve for DivWin",auc=TRUE)
-roctest_id_w<- roc(response=test.data_id$divID=="W",predictor=div_win_predict_test,plot=TRUE,auc=TRUE,add=TRUE,col=2)
-legend(0,0.4,legend=c("training","testing"),fill=1:2)
-
-
-youden_id_train_w<-coords(roctrain_id_w,"b",best.method="youden",transpose=TRUE)
-youden_id_train_w
-youden_id_train_w[2]+youden_id_train_w[3]
-
-youden_id_test_w<-coords(roctest_id_w,x= 0.03102454,transpose=TRUE)
-youden_sens_spec_w <- youden_id_test_w[2]+youden_id_test_w[3]
-youden_sens_spec_w
-```
-
-```{r}
-divisions <- c("C", "E", "W")
-sens_and_spec_sum <- c(youden_sens_spec_c,youden_sens_spec_e,youden_sens_spec_w)
-table_for_bar_graph <- as_tibble(data.frame(divisions,sens_and_spec_sum))
-table_for_bar_graph
-
-
-```
-
-#Bar chart
-```{r}
-table_for_bar_graph %>% 
-  ggplot(mapping = aes(x = divisions,y = sens_and_spec_sum))+
-  geom_col()+
-  labs(x = "Team divisions",y = "Sum of sensitivity and specificty",
-       title = "Sum of sensitivity and specificity across team divisions")+
-  theme_classic()
-```
-**The sum of sensitivity and specificity across team divisions varied, it was poorest for team division E (0.9714588) this was less than 1 (value we get for a free model), for team division C it was better with the sum coming to 1.0804922 implying that in this division there was a 8% increase in numbers of correct classification. The model performed best on team division W with the sum of sensitivity and specificity coming to 1.1648352 implying that there was a 16% overall increase in numbers of correct classification.The model made the most classification on team division W, followed by team division C and the model didn't perform so well with team division E**
