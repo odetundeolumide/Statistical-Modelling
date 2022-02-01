@@ -11,3 +11,7 @@ To run this program, install R studio locally. [Download R Studio](https://www.r
 * Poisson Regression
 * Lasso Regression
 * Logistic Regression
+
+### Data Wrangling
+Line 42 - 145 : Wrangling of the dataset to create tibbles and varaibles used  
+through ou the program
