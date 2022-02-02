@@ -6,7 +6,7 @@ Program written in R version 4.1.2 (2021-11-01) -- "Bird Hippie".
 To run this program, install R studio locally. [Download R Studio](https://www.rstudio.com/products/rstudio/download/)
 
 ## Table of Content
-* [Data Wrangling] (### Data Wrangling)
+* Data Wrangling
 * Linear Regression
 * Poisson Regression
 * Lasso Regression
